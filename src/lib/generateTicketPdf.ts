@@ -116,8 +116,10 @@ export function generateTicketPdf(data: TicketData) {
   const col2 = w / 2;
   const col3 = w - 50;
 
-  doc.text("FILA", col1, y + 1, { align: "center" });
-  doc.text("BUTACA", col2, y + 1, { align: "center" });
+  const col0 = 42;
+  doc.text("ZONA", col0, y + 1, { align: "center" });
+  doc.text("FILA", col1 + 10, y + 1, { align: "center" });
+  doc.text("BUTACA", col2 + 5, y + 1, { align: "center" });
   doc.text("PRECIO", col3, y + 1, { align: "center" });
   y += 10;
 
@@ -126,8 +128,9 @@ export function generateTicketPdf(data: TicketData) {
   doc.setFontSize(11);
   doc.setTextColor(50, 50, 50);
   selectedSeats.forEach((s) => {
-    doc.text(String(s.row), col1, y, { align: "center" });
-    doc.text(String(s.number), col2, y, { align: "center" });
+    doc.text(zone ? zone.toUpperCase() : "—", col0, y, { align: "center" });
+    doc.text(String(s.row), col1 + 10, y, { align: "center" });
+    doc.text(String(s.number), col2 + 5, y, { align: "center" });
     doc.text(`${s.price.toFixed(2)} €`, col3, y, { align: "center" });
     y += 8;
   });
