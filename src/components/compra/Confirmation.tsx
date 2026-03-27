@@ -7,13 +7,14 @@ import type { SelectedSeat } from "@/pages/Compra";
 import { generateQrDataUrl, generateTicketPdf } from "@/lib/generateTicketPdf";
 
 interface Props {
-  event: { title: string; date: string; venue: string };
+  event: { title: string; date: string; venue: string; category?: string; image?: string };
   orderRef: string;
   selectedSeats: SelectedSeat[];
   total: number;
+  zone?: string;
 }
 
-const Confirmation = ({ event, orderRef, selectedSeats, total }: Props) => {
+const Confirmation = ({ event, orderRef, selectedSeats, total, zone }: Props) => {
   const navigate = useNavigate();
   const [qrSrc, setQrSrc] = useState("");
 
@@ -23,7 +24,7 @@ const Confirmation = ({ event, orderRef, selectedSeats, total }: Props) => {
   }, [orderRef, event.title, selectedSeats.length, total]);
 
   const handleDownload = () => {
-    generateTicketPdf({ event, orderRef, selectedSeats, total });
+    generateTicketPdf({ event, orderRef, selectedSeats, total, zone });
   };
 
   return (

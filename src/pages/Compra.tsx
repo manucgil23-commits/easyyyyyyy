@@ -89,7 +89,7 @@ const Compra = () => {
         {step === 1 && <EventDetail event={eventData} onSelectZone={goToZoneSelection} />}
         {step === 2 && <SeatSelection zone={selectedZone!} selectedSeats={selectedSeats} onToggleSeat={toggleSeat} onContinue={goToCheckout} onBack={goBack} />}
         {step === 3 && <CheckoutStep event={eventData} zone={selectedZone!} selectedSeats={selectedSeats} total={total} onConfirm={goToConfirmation} onBack={goBack} />}
-        {step === 4 && <Confirmation event={eventData} orderRef={orderRef} selectedSeats={selectedSeats} total={total} />}
+        {step === 4 && <Confirmation event={eventData} orderRef={orderRef} selectedSeats={selectedSeats} total={total} zone={selectedZone ?? undefined} />}
       </div>
       <Footer />
     </div>
