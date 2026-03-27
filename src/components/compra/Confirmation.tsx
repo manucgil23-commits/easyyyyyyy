@@ -48,27 +48,57 @@ const Confirmation = ({ event, orderRef, selectedSeats, total, zone }: Props) =>
         <p className="text-sm text-muted-foreground">Presenta este QR en el acceso al recinto</p>
       </div>
 
-      {/* Order Card */}
-      <div className="bg-card rounded-xl border border-border p-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">Referencia</span>
-          <span className="font-mono font-bold text-primary text-lg">{orderRef}</span>
-        </div>
-        <div className="border-t border-border" />
-        <p className="font-bold text-foreground">{event.title}</p>
-        <p className="text-sm text-muted-foreground">{event.date}</p>
-        <p className="text-sm text-muted-foreground">{event.venue}</p>
-        <div className="border-t border-border" />
-        {selectedSeats.map((s) => (
-          <div key={`${s.row}-${s.number}`} className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Fila {s.row}, Butaca {s.number}</span>
-            <span className="text-foreground">{s.price}€</span>
+      {/* Event Info Card */}
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="bg-primary p-4 flex items-center gap-4">
+          {event.image && (
+            <img src={event.image} alt={event.title} className="w-20 h-20 rounded-lg object-cover border-2 border-primary-foreground/20" />
+          )}
+          <div className="text-primary-foreground">
+            <h2 className="font-bold text-lg">{event.title}</h2>
+            <p className="text-sm opacity-90">{event.date}</p>
+            <p className="text-sm opacity-90">{event.venue}</p>
+            {zone && <span className="inline-block mt-1 text-xs font-bold bg-accent text-accent-foreground px-2 py-0.5 rounded-full">{zone}</span>}
+            {event.category && <span className="inline-block mt-1 ml-2 text-xs font-semibold bg-primary-foreground/20 text-primary-foreground px-2 py-0.5 rounded-full">{event.category}</span>}
           </div>
-        ))}
-        <div className="border-t border-border" />
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-foreground">Total pagado</span>
-          <span className="text-2xl font-bold text-accent">{total}€</span>
+        </div>
+
+        <div className="p-6 space-y-4">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">Referencia</span>
+            <span className="font-mono font-bold text-primary text-lg">{orderRef}</span>
+          </div>
+          <div className="border-t border-border" />
+
+          {/* Seat table with zone column */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-muted-foreground border-b border-border">
+                  <th className="text-left py-2 font-medium">Zona</th>
+                  <th className="text-left py-2 font-medium">Fila</th>
+                  <th className="text-left py-2 font-medium">Butaca</th>
+                  <th className="text-right py-2 font-medium">Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedSeats.map((s) => (
+                  <tr key={`${s.row}-${s.number}`} className="border-b border-border/50">
+                    <td className="py-2 text-foreground">{zone || "—"}</td>
+                    <td className="py-2 text-foreground">{s.row}</td>
+                    <td className="py-2 text-foreground">{s.number}</td>
+                    <td className="py-2 text-right text-foreground font-semibold">{s.price}€</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="border-t border-border" />
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-foreground">Total pagado</span>
+            <span className="text-2xl font-bold text-accent">{total}€</span>
+          </div>
         </div>
       </div>
 
