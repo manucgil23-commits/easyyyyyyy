@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CheckCircle2, Download, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { SelectedSeat } from "@/pages/Compra";
+import { generateQrDataUrl, generateTicketPdf } from "@/lib/generateTicketPdf";
 
 interface Props {
   event: { title: string; date: string; venue: string };
@@ -13,6 +15,16 @@ interface Props {
 
 const Confirmation = ({ event, orderRef, selectedSeats, total }: Props) => {
   const navigate = useNavigate();
+  const [qrSrc, setQrSrc] = useState("");
+
+  useEffect(() => {
+    const qrContent = JSON.stringify({ ref: orderRef, event: event.title, seats: selectedSeats.length, total });
+    setQrSrc(generateQrDataUrl(qrContent));
+  }, [orderRef, event.title, selectedSeats.length, total]);
+
+  const handleDownload = () => {
+    generateTicketPdf({ event, orderRef, selectedSeats, total });
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 py-8">
@@ -25,6 +37,14 @@ const Confirmation = ({ event, orderRef, selectedSeats, total }: Props) => {
         <p className="text-muted-foreground">
           Hemos enviado tus entradas a <strong>tu@email.com</strong>
         </p>
+      </div>
+
+      {/* QR Code */}
+      <div className="flex flex-col items-center gap-3">
+        {qrSrc && (
+          <img src={qrSrc} alt="Código QR de tu entrada" className="w-40 h-40 rounded-xl border border-border shadow-md" />
+        )}
+        <p className="text-sm text-muted-foreground">Presenta este QR en el acceso al recinto</p>
       </div>
 
       {/* Order Card */}
@@ -52,7 +72,11 @@ const Confirmation = ({ event, orderRef, selectedSeats, total }: Props) => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button size="lg" className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full font-semibold">
+        <Button
+          size="lg"
+          className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full font-semibold"
+          onClick={handleDownload}
+        >
           <Download className="h-4 w-4 mr-2" />
           Descargar entradas (PDF)
         </Button>
